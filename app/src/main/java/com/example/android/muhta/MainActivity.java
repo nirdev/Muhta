@@ -1,23 +1,19 @@
 package com.example.android.muhta;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
 
 import com.parse.ParseUser;
@@ -25,6 +21,8 @@ import com.parse.ParseUser;
 public class MainActivity extends AppCompatActivity {
 
 
+
+    String nir;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -43,9 +41,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        nir = "5";
 
         ParseUser currentUser = ParseUser.getCurrentUser();
-        if(currentUser!=null) {
+        if (currentUser != null) {
             setContentView(R.layout.activity_main);
 
 
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(mViewPager);
-        }else{
+        } else {
             startActivity(new Intent(MainActivity.this, SignupActivity.class));
             finish();
         }

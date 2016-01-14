@@ -36,11 +36,9 @@ public class FacebookLogin extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
 
-
         setContentView(R.layout.activity_facebook_login);
 
 
-        
         user = ParseUser.getCurrentUser();
         loginFB = (LoginButton) findViewById(R.id.login_button);
 
@@ -82,7 +80,6 @@ public class FacebookLogin extends AppCompatActivity {
             }
 
         });
-
 
 
     }

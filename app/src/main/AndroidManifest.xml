@@ -25,7 +25,7 @@
 
         <activity
             android:name=".SignupActivity"
-            android:label="Sign Up"/>
+            android:label="Sign Up" />
         <activity
             android:name=".FacebookLogin"
             android:label="Sign Up - Facebook" />
@@ -41,11 +41,11 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

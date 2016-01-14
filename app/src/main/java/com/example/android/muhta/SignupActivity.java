@@ -44,32 +44,31 @@ public class SignupActivity extends AppCompatActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
 
 
-
         setContentView(R.layout.activity_signup);
 
         Util.setupUI(findViewById(android.R.id.content), SignupActivity.this);
 
 
-            userPhone = (EditText) findViewById(R.id.user_phone);
-            nextB = (Button) findViewById(R.id.next_button1);
-            prefixSpin = (Spinner) findViewById(R.id.spinner);
+        userPhone = (EditText) findViewById(R.id.user_phone);
+        nextB = (Button) findViewById(R.id.next_button1);
+        prefixSpin = (Spinner) findViewById(R.id.spinner);
 
-            locale = Locale.getAvailableLocales();
-            countries = new ArrayList<String>();
-            for (Locale loc : locale) {
-                country = loc.getDisplayCountry();
-                if (country.length() > 0 && !countries.contains(country)) {
-                    countries.add(country);
-                }
+        locale = Locale.getAvailableLocales();
+        countries = new ArrayList<String>();
+        for (Locale loc : locale) {
+            country = loc.getDisplayCountry();
+            if (country.length() > 0 && !countries.contains(country)) {
+                countries.add(country);
             }
-            Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+        }
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, countries);
-            prefixSpin.setAdapter(adapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, countries);
+        prefixSpin.setAdapter(adapter);
 
-            nextB.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        nextB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
 
                 if (!userPhone.equals("")) {
@@ -83,60 +82,60 @@ public class SignupActivity extends AppCompatActivity {
                         @Override
                         public void done(ParseException e) {
 
-                        if (e != null) {
+                            if (e != null) {
 
-                            Toast.makeText(getApplicationContext(), "Saving user failed.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Saving user failed.", Toast.LENGTH_SHORT).show();
 
-                            if (e.getCode() == 202) {
+                                if (e.getCode() == 202) {
 
-                                Toast.makeText(getApplicationContext(), "Phone number already taken. \nPlease choose another phone number.",
-                                        Toast.LENGTH_LONG).show();
-                                userPhone.setText("");
+                                    Toast.makeText(getApplicationContext(), "Phone number already taken. \nPlease choose another phone number.",
+                                            Toast.LENGTH_LONG).show();
+                                    userPhone.setText("");
 
-                                user.deleteInBackground();
-                            }
+                                    user.deleteInBackground();
+                                }
 
-                        } else {
-
-
-                            Toast.makeText(getApplicationContext(), "User Saved", Toast.LENGTH_SHORT).show();
-
-                            ContentResolver cr = getContentResolver();
-                            Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-                                    null, null, null, null);
-                            if (cur.getCount() > 0) {
-                                while (cur.moveToNext()) {
-                                    String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                                    String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                                    if (Integer.parseInt(cur.getString(
-                                            cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                                        Cursor pCur = cr.query(
-                                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                                null,
-                                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                                new String[]{id}, null);
-                                        while (pCur.moveToNext()) {
-                                            String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            } else {
 
 
-                                            ParseObject contactsList = new ParseObject("contactsList");
+                                Toast.makeText(getApplicationContext(), "User Saved", Toast.LENGTH_SHORT).show();
 
-                                            contactsList.put("phoneNumber", phoneNo);
-                                            contactsList.put("name", name);
-                                            contactsList.put("addedBy", user.getObjectId());
-                                            contactsList.saveInBackground();
+                                ContentResolver cr = getContentResolver();
+                                Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+                                        null, null, null, null);
+                                if (cur.getCount() > 0) {
+                                    while (cur.moveToNext()) {
+                                        String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                                        String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                        if (Integer.parseInt(cur.getString(
+                                                cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                                            Cursor pCur = cr.query(
+                                                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                                    null,
+                                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                                    new String[]{id}, null);
+                                            while (pCur.moveToNext()) {
+                                                String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-                                          //   Toast.makeText(getApplicationContext(), "Name: " + name + ", Phone No: " + phoneNo, Toast.LENGTH_SHORT).show();
+
+                                                ParseObject contactsList = new ParseObject("contactsList");
+
+                                                contactsList.put("phoneNumber", phoneNo);
+                                                contactsList.put("name", name);
+                                                contactsList.put("addedBy", user.getObjectId());
+                                                contactsList.saveInBackground();
+
+                                                //   Toast.makeText(getApplicationContext(), "Name: " + name + ", Phone No: " + phoneNo, Toast.LENGTH_SHORT).show();
+                                            }
+                                            pCur.close();
                                         }
-                                        pCur.close();
                                     }
                                 }
+
+                                startActivity(new Intent(SignupActivity.this, FacebookLogin.class));
+                                finish();
+
                             }
-
-                            startActivity(new Intent(SignupActivity.this, FacebookLogin.class));
-                            finish();
-
-                        }
 
                         }
                     });
