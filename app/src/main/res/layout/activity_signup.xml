@@ -4,53 +4,67 @@
     android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#c6c6c6"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SignupActivity">
 
-    <TextView
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Please Enter Your Phone Number"
-        android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="90dp"
+        android:background="@drawable/background_with_shadow">
 
-    <EditText
-        android:id="@+id/user_phone"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="46dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignRight="@+id/textView"
-        android:layout_alignEnd="@+id/textView"
-        android:layout_marginRight="35dp"
-        android:layout_marginEnd="35dp"
-        android:layout_toRightOf="@+id/spinner"
-        android:layout_toEndOf="@+id/spinner" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next"
-        android:id="@+id/next_button1"
-        android:layout_below="@+id/user_phone"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="210dp">
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_alignBottom="@+id/user_phone"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/next_button1"
-        android:layout_alignTop="@+id/user_phone"
-        android:layout_toLeftOf="@+id/next_button1" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="6dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="Please Enter Your Phone Number"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
+            <EditText
+                android:id="@+id/user_phone"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/phone_umber_hint"
+                android:inputType="phone"
+                android:layout_above="@+id/next_button1"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="27dp" />
+
+            <Button
+                android:id="@+id/next_button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:id="@+id/choose_country_button_ID"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_above="@+id/user_phone"
+                android:layout_centerHorizontal="true"
+                android:text="default country" />
+
+
+
+        </RelativeLayout>
+    </FrameLayout>
 </RelativeLayout>

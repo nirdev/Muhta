@@ -1,19 +1,15 @@
 package com.example.android.muhta;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -22,7 +18,6 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 
 import Util.Util;
@@ -31,38 +26,45 @@ public class SignupActivity extends AppCompatActivity {
 
     private EditText userPhone;
     private Button nextB;
-    private Spinner prefixSpin;
+    private Button choose_country_btn;
     private ParseUser user;
     private Locale[] locale;
     private ArrayList<String> countries;
     private String country;
 
+    //First signup activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         setContentView(R.layout.activity_signup);
 
+        //keyboard closing class
         Util.setupUI(findViewById(android.R.id.content), SignupActivity.this);
 
 
+        //Declaring view variables
         userPhone = (EditText) findViewById(R.id.user_phone);
         nextB = (Button) findViewById(R.id.next_button1);
-        prefixSpin = (Spinner) findViewById(R.id.spinner);
+        choose_country_btn = (Button) findViewById(R.id.choose_country_button_ID);
 
-        locale = Locale.getAvailableLocales();
-        countries = new ArrayList<String>();
-        for (Locale loc : locale) {
-            country = loc.getDisplayCountry();
-            if (country.length() > 0 && !countries.contains(country)) {
-                countries.add(country);
+        //Call country fragment
+
+        final Intent intent = new Intent(this, CountrycodeActivity.class);
+        choose_country_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(intent, 1);
             }
-        }
-        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+        });
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, countries);
-        prefixSpin.setAdapter(adapter);
 
+
+
+
+        //user click next after inserting phone number
         nextB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,5 +150,15 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //if = 1 - result for country code
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            String countryCode = data.getStringExtra(CountrycodeActivity.RESULT_CONTRYCODE);
+            Toast.makeText(this, "You selected countrycode: " + countryCode, Toast.LENGTH_LONG).show();
+        }
+    }
 
 }

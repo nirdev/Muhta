@@ -21,8 +21,6 @@ import com.parse.ParseUser;
 public class MainActivity extends AppCompatActivity {
 
 
-
-    String Reznik;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -41,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Reznik = "5";
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
