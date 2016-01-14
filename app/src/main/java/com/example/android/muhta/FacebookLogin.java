@@ -62,12 +62,14 @@ public class FacebookLogin extends AppCompatActivity {
 
                 }
 
-                GraphRequest request = GraphRequest.newMeRequest(
+                final GraphRequest request = GraphRequest.newMeRequest(
                         AccessToken.getCurrentAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 // Insert your code here
+                                JSONObject jsonObject = new JSONObject(request);
+                                user.put("facebookId", );
                             }
                         });
 

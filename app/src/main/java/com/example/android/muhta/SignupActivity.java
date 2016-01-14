@@ -41,9 +41,6 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
-
-
         setContentView(R.layout.activity_signup);
 
         Util.setupUI(findViewById(android.R.id.content), SignupActivity.this);
@@ -71,79 +68,79 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if (!userPhone.equals("")) {
+            if (!userPhone.equals("")) {
 
-                    user = new ParseUser();
-                    user.setUsername(userPhone.getText().toString());
-                    user.setPassword("1234");
+                user = new ParseUser();
+                user.setUsername(userPhone.getText().toString());
+                user.setPassword("1234");
 
-                    user.signUpInBackground(new SignUpCallback() {
+                user.signUpInBackground(new SignUpCallback() {
 
-                        @Override
-                        public void done(ParseException e) {
+                    @Override
+                    public void done(ParseException e) {
 
-                            if (e != null) {
+                    if (e != null) {
 
-                                Toast.makeText(getApplicationContext(), "Saving user failed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Saving user failed.", Toast.LENGTH_SHORT).show();
 
-                                if (e.getCode() == 202) {
+                        if (e.getCode() == 202) {
 
-                                    Toast.makeText(getApplicationContext(), "Phone number already taken. \nPlease choose another phone number.",
-                                            Toast.LENGTH_LONG).show();
-                                    userPhone.setText("");
+                            Toast.makeText(getApplicationContext(), "Phone number already taken. \nPlease choose another phone number.",
+                                    Toast.LENGTH_LONG).show();
+                            userPhone.setText("");
 
-                                    user.deleteInBackground();
-                                }
-
-                            } else {
-
-
-                                Toast.makeText(getApplicationContext(), "User Saved", Toast.LENGTH_SHORT).show();
-
-                                ContentResolver cr = getContentResolver();
-                                Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-                                        null, null, null, null);
-                                if (cur.getCount() > 0) {
-                                    while (cur.moveToNext()) {
-                                        String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                                        String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                                        if (Integer.parseInt(cur.getString(
-                                                cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                                            Cursor pCur = cr.query(
-                                                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                                    null,
-                                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                                    new String[]{id}, null);
-                                            while (pCur.moveToNext()) {
-                                                String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-
-                                                ParseObject contactsList = new ParseObject("contactsList");
-
-                                                contactsList.put("phoneNumber", phoneNo);
-                                                contactsList.put("name", name);
-                                                contactsList.put("addedBy", user.getObjectId());
-                                                contactsList.saveInBackground();
-
-                                                //   Toast.makeText(getApplicationContext(), "Name: " + name + ", Phone No: " + phoneNo, Toast.LENGTH_SHORT).show();
-                                            }
-                                            pCur.close();
-                                        }
-                                    }
-                                }
-
-                                startActivity(new Intent(SignupActivity.this, FacebookLogin.class));
-                                finish();
-
-                            }
-
+                            user.deleteInBackground();
                         }
-                    });
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please insert your phone number",
-                            Toast.LENGTH_SHORT).show();
-                }
+                    } else {
+
+
+                        Toast.makeText(getApplicationContext(), "User Saved", Toast.LENGTH_SHORT).show();
+
+                        ContentResolver cr = getContentResolver();
+                        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+                                null, null, null, null);
+                        if (cur.getCount() > 0) {
+                            while (cur.moveToNext()) {
+                                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                                String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                if (Integer.parseInt(cur.getString(
+                                        cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                                    Cursor pCur = cr.query(
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                            null,
+                                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                            new String[]{id}, null);
+                                    while (pCur.moveToNext()) {
+                                        String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+
+                                        ParseObject contactsList = new ParseObject("contactsList");
+
+                                        contactsList.put("phoneNumber", phoneNo);
+                                        contactsList.put("name", name);
+                                        contactsList.put("addedBy", user.getObjectId());
+                                        contactsList.saveInBackground();
+
+                                      //   Toast.makeText(getApplicationContext(), "Name: " + name + ", Phone No: " + phoneNo, Toast.LENGTH_SHORT).show();
+                                    }
+                                    pCur.close();
+                                }
+                            }
+                        }
+
+                        startActivity(new Intent(SignupActivity.this, FacebookLogin.class));
+                        finish();
+
+                    }
+
+                    }
+                });
+
+            } else {
+                Toast.makeText(getApplicationContext(), "Please insert your phone number",
+                        Toast.LENGTH_SHORT).show();
+            }
 
             }
         });
