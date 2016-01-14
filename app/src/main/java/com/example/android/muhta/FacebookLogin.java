@@ -3,19 +3,17 @@ package com.example.android.muhta;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import org.json.JSONObject;
 
@@ -36,50 +34,61 @@ public class FacebookLogin extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
 
+
         setContentView(R.layout.activity_facebook_login);
+
 
 
         user = ParseUser.getCurrentUser();
         loginFB = (LoginButton) findViewById(R.id.login_button);
 
 
-        loginFB.setOnClickListener(new View.OnClickListener() {
+        List<String> permissions = Arrays.asList("public_profile", "email");
+
+        loginFB.setReadPermissions(permissions);
+
+        loginFB.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onClick(View v) {
-                List<String> permissions = Arrays.asList("public_profile", "user_about_me", "email", "user_photos");
+            public void onSuccess(LoginResult loginResult) {
 
-                if (!ParseFacebookUtils.isLinked(user)) {
-                    ParseFacebookUtils.linkWithReadPermissionsInBackground(user, FacebookLogin.this, permissions, new SaveCallback() {
-                        @Override
-                        public void done(ParseException ex) {
-                            if (ParseFacebookUtils.isLinked(user)) {
-                                Log.d("MyApp", "Woohoo, user logged in with Facebook!");
-                                //Toast.makeText(getApplicationContext(), "You are fucking here", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-                    });
-
-                }
-
-                final GraphRequest request = GraphRequest.newMeRequest(
+                GraphRequest request = GraphRequest.newMeRequest(
                         AccessToken.getCurrentAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                // Insert your code here
-                               // JSONObject jsonObject = new JSONObject(request);
+
+                                user.put("facebookId", object.optString("id"));
+                                user.put("facebookName", object.optString("name"));
+                                user.put("facebookEmail", object.optString("email"));
+
+                                user.saveInBackground();
+
                             }
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,about,photos,email");
+                parameters.putString("fields", "id,name,email");
                 request.setParameters(parameters);
                 request.executeAsync();
 
+                startActivity(new Intent(FacebookLogin.this, TutorialActivity.class));
+                finish();
 
             }
 
+            @Override
+            public void onCancel() {
+
+                Toast.makeText(getApplicationContext(), "Facebook Login Canceled", Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+
+                Toast.makeText(getApplicationContext(), "Facebook Login Had an Error", Toast.LENGTH_LONG).show();
+
+            }
         });
 
 
@@ -90,8 +99,5 @@ public class FacebookLogin extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
-        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
-        startActivity(new Intent(FacebookLogin.this, TutorialActivity.class));
-        finish();
     }
 }

@@ -28,9 +28,7 @@ public class SignupActivity extends AppCompatActivity {
     private Button nextB;
     private Button choose_country_btn;
     private ParseUser user;
-    private Locale[] locale;
-    private ArrayList<String> countries;
-    private String country;
+    private String userPhoneNum;
 
     //First signup activity
     @Override
@@ -69,12 +67,19 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+            userPhoneNum = userPhone.getText().toString();
 
-            if (!userPhone.equals("")) {
 
-                user = new ParseUser();
-                user.setUsername(userPhone.getText().toString());
-                user.setPassword("1234");
+                if (userPhoneNum.length()==9 || userPhoneNum.length() ==10) {
+
+
+                    user = new ParseUser();
+                    if(userPhone.getText().toString().charAt(0)=='0') {
+                        user.setUsername(userPhoneNum.substring(1));
+                    }
+                    else {
+                        user.setUsername(userPhoneNum);
+                    }
 
                 user.signUpInBackground(new SignUpCallback() {
 
@@ -124,7 +129,6 @@ public class SignupActivity extends AppCompatActivity {
                                         contactsList.put("addedBy", user.getObjectId());
                                         contactsList.saveInBackground();
 
-                                      //   Toast.makeText(getApplicationContext(), "Name: " + name + ", Phone No: " + phoneNo, Toast.LENGTH_SHORT).show();
                                     }
                                     pCur.close();
                                 }
@@ -140,7 +144,7 @@ public class SignupActivity extends AppCompatActivity {
                 });
 
             } else {
-                Toast.makeText(getApplicationContext(), "Please insert your phone number",
+                Toast.makeText(getApplicationContext(), "Please insert a valid phone number",
                         Toast.LENGTH_SHORT).show();
             }
 
