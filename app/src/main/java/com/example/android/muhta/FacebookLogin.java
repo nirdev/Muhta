@@ -68,8 +68,7 @@ public class FacebookLogin extends AppCompatActivity {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 // Insert your code here
-                                JSONObject jsonObject = new JSONObject(request);
-                                user.put("facebookId", );
+                               // JSONObject jsonObject = new JSONObject(request);
                             }
                         });
 
