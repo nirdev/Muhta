@@ -10,15 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-
-import java.util.ArrayList;
-import java.util.Locale;
 
 import Util.Util;
 
@@ -27,6 +24,7 @@ public class SignupActivity extends AppCompatActivity {
     private EditText userPhone;
     private Button nextB;
     private Button choose_country_btn;
+    private TextView country_code_textview;
     private ParseUser user;
     private String userPhoneNum;
 
@@ -44,12 +42,12 @@ public class SignupActivity extends AppCompatActivity {
 
 
         //Declaring view variables
-        userPhone = (EditText) findViewById(R.id.user_phone);
+        userPhone = (EditText) findViewById(R.id.user_phone_signup_XMLID);
         nextB = (Button) findViewById(R.id.next_button1);
         choose_country_btn = (Button) findViewById(R.id.choose_country_button_ID);
+        country_code_textview = (TextView) findViewById(R.id.country_code_signup_XMLID);
 
         //Call country fragment
-
         final Intent intent = new Intent(this, CountrycodeActivity.class);
         choose_country_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +93,6 @@ public class SignupActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Phone number already taken. \nPlease choose another phone number.",
                                     Toast.LENGTH_LONG).show();
                             userPhone.setText("");
-
                             user.deleteInBackground();
                         }
 
@@ -134,7 +131,6 @@ public class SignupActivity extends AppCompatActivity {
                                 }
                             }
                         }
-
                         startActivity(new Intent(SignupActivity.this, FacebookLogin.class));
                         finish();
 
@@ -147,7 +143,6 @@ public class SignupActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Please insert a valid phone number",
                         Toast.LENGTH_SHORT).show();
             }
-
             }
         });
 
@@ -161,7 +156,12 @@ public class SignupActivity extends AppCompatActivity {
         //if = 1 - result for country code
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
             String countryCode = data.getStringExtra(CountrycodeActivity.RESULT_CONTRYCODE);
-            Toast.makeText(this, "You selected countrycode: " + countryCode, Toast.LENGTH_LONG).show();
+            String countryName = data.getStringExtra(CountrycodeActivity.RESULT_CONTRYNAME);
+            Toast.makeText(this, "You selected countrycode: " + countryCode + "countryname:" +countryName, Toast.LENGTH_LONG).show();
+            choose_country_btn = (Button) findViewById(R.id.choose_country_button_ID);
+            choose_country_btn.setText(countryName);
+            country_code_textview.setText(countryCode);
+
         }
     }
 
