@@ -7,17 +7,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import Util.Util;
 
- //Full guide on country code at this address: http://envyandroid.com/creating-listdialog-with-images-and-text/
+
+//Full guide on country code at this address: http://envyandroid.com/creating-listdialog-with-images-and-text/
 
 public class CountrycodeActivity extends ListActivity {
 
+
     public static String RESULT_CONTRYCODE = "countrycode";
-    public String[] countrynames, countrycodes;
+    public static String RESULT_CONTRYNAME = "countryname";
     private List<Country> countryList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +42,59 @@ public class CountrycodeActivity extends ListActivity {
                 Country c = countryList.get(position);
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra(RESULT_CONTRYCODE, c.getCode());
+                returnIntent.putExtra(RESULT_CONTRYNAME, c.getName());
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
         });
     }
 
+
+    //make the json file readable (parse the json file)
+    public String loadJSONFromAsset() {
+        String json = null;
+        try {
+            InputStream is = getAssets().open("countries.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+
     private void populateCountryList() {
         countryList = new ArrayList<Country>();
-        countrynames = getResources().getStringArray(R.array.country_names);
-        countrycodes = getResources().getStringArray(R.array.country_names);
-        for(int i = 0; i < countrycodes.length; i++){
-            countryList.add(new Country(countrynames[i], countrycodes[i]));
+
+        //read file from json buffer
+        try {
+            //read file from json buffer
+            JSONObject jsonObjectMain = new JSONObject(loadJSONFromAsset());
+            JSONArray jsonArrayMain = jsonObjectMain.getJSONArray("countries");
+
+            for(int i = 0; i < jsonArrayMain.length(); i++) {
+
+                JSONObject objcountry = jsonArrayMain.getJSONObject(i);
+                countryList.add(new Country(Util.getString("name", objcountry), Util.getString("code", objcountry)));
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+
+//        countrynames = getResources().getStringArray(R.array.country_names);
+//        countrycodes = getResources().getStringArray(R.array.country_codes);
+//
+//        for(int i = 0; i < countrycodes.length; i++){
+//            countryList.add(new Country(countrynames[i], countrycodes[i]));
+//        }
     }
 
     public class Country {
