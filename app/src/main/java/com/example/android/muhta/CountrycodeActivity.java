@@ -33,6 +33,7 @@ public class CountrycodeActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         populateCountryList();
         ArrayAdapter<Country> adapter = new CountryListArrayAdapter(this, countryList);
         setListAdapter(adapter);

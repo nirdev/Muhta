@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -20,7 +21,7 @@ import com.parse.SignUpCallback;
 
 import Util.Util;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity implements AsyncResponseIPLocation {
 
     private EditText userPhone;
     private Button nextB;
@@ -28,6 +29,8 @@ public class SignupActivity extends AppCompatActivity {
     private TextView country_code_textview;
     private ParseUser user;
     private String userPhoneNum;
+    private String mPrefixisnull = null;
+    getIPLocationFromURL task = new getIPLocationFromURL(this);
 
     //First signup activity
     @Override
@@ -38,8 +41,20 @@ public class SignupActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_signup);
 
+
         //keyboard closing class
         Util.setupUI(findViewById(android.R.id.content), SignupActivity.this);
+
+        //Start Async task "getDataFromUrl" to check location of the user by ip
+
+
+
+        //this to set delegate/listener back to this class
+        task.countryNameINTERFACE = this;
+        task.execute();
+
+
+
 
 
         //Declaring view variables
@@ -63,19 +78,25 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-            userPhoneNum = userPhone.getText().toString();
+                userPhoneNum = userPhone.getText().toString();
+               // choose_country_btn = (Button) findViewById(R.id.choose_country_button_ID);
+                country_code_textview = (TextView) findViewById(R.id.country_code_signup_XMLID);
+                mPrefixisnull = country_code_textview.getText().toString();
 
-
-                if (userPhoneNum.length()==9 || userPhoneNum.length() ==10) {
+                Log.e("mPrefix", mPrefixisnull);
+                if ((userPhoneNum.length()==9 || userPhoneNum.length() ==10) && !mPrefixisnull.equals("")){
 
 
                     user = new ParseUser();
                     //check if the phone number entered by user starts with 0
                     if(userPhone.getText().toString().charAt(0)=='0') {
-                        user.setUsername(userPhoneNum.substring(1));
-                    }
-                    else {
-                        user.setUsername(userPhoneNum);
+                        user.setUsername(mPrefixisnull+userPhoneNum.substring(1));
+                        user.put("country", choose_country_btn.getText());
+                    } else {
+
+                        user.setUsername(mPrefixisnull+userPhoneNum);
+                        user.put("country", choose_country_btn.getText());
+
                     }
 
                     user.setPassword("1234");
@@ -150,7 +171,7 @@ public class SignupActivity extends AppCompatActivity {
                 });
 
             } else {
-                Toast.makeText(getApplicationContext(), "Please insert a valid phone number",
+                Toast.makeText(getApplicationContext(), "Please insert a valid phone number and country",
                         Toast.LENGTH_SHORT).show();
             }
             }
@@ -167,7 +188,6 @@ public class SignupActivity extends AppCompatActivity {
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
             String countryCode = data.getStringExtra(CountrycodeActivity.RESULT_CONTRYCODE);
             String countryName = data.getStringExtra(CountrycodeActivity.RESULT_CONTRYNAME);
-            Toast.makeText(this, "You selected countrycode: " + countryCode + "countryname:" +countryName, Toast.LENGTH_LONG).show();
             choose_country_btn = (Button) findViewById(R.id.choose_country_button_ID);
             choose_country_btn.setText(countryName);
             country_code_textview.setText(countryCode);
@@ -175,4 +195,13 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void processFinish(String[] output) {
+
+        choose_country_btn = (Button) findViewById(R.id.choose_country_button_ID);
+        country_code_textview = (TextView) findViewById(R.id.country_code_signup_XMLID);
+        choose_country_btn.setText(output[0]);
+        country_code_textview.setText(output[1]);
+
+    }
 }
