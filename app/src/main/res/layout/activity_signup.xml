@@ -42,7 +42,6 @@
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/phone_umber_hint"
-                android:inputType="phone"
                 android:layout_above="@+id/next_button1"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"

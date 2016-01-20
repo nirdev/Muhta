@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,9 +58,6 @@ public class SignupActivity extends AppCompatActivity {
         });
 
 
-
-
-
         //user click next after inserting phone number
         nextB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,12 +70,15 @@ public class SignupActivity extends AppCompatActivity {
 
 
                     user = new ParseUser();
+                    //check if the phone number entered by user starts with 0
                     if(userPhone.getText().toString().charAt(0)=='0') {
                         user.setUsername(userPhoneNum.substring(1));
                     }
                     else {
                         user.setUsername(userPhoneNum);
                     }
+
+                    user.setPassword("1234");
 
                 user.signUpInBackground(new SignUpCallback() {
 
@@ -87,6 +88,7 @@ public class SignupActivity extends AppCompatActivity {
                     if (e != null) {
 
                         Toast.makeText(getApplicationContext(), "Saving user failed.", Toast.LENGTH_SHORT).show();
+                        Log.e("why the fuck", e.getMessage());
 
                         if (e.getCode() == 202) {
 
@@ -98,38 +100,46 @@ public class SignupActivity extends AppCompatActivity {
 
                     } else {
 
-
                         Toast.makeText(getApplicationContext(), "User Saved", Toast.LENGTH_SHORT).show();
 
                         ContentResolver cr = getContentResolver();
                         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                                 null, null, null, null);
-                        if (cur.getCount() > 0) {
-                            while (cur.moveToNext()) {
-                                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                                String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                                if (Integer.parseInt(cur.getString(
-                                        cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                                    Cursor pCur = cr.query(
-                                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                            null,
-                                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                            new String[]{id}, null);
-                                    while (pCur.moveToNext()) {
-                                        String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        if (cur != null) {
+                            if (cur.getCount() > 0) {
+                                while (cur.moveToNext()) {
+                                    String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                                    String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                    if (Integer.parseInt(cur.getString(
+                                            cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                                        Cursor pCur = cr.query(
+                                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                                null,
+                                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                                new String[]{id}, null);
+                                        if (pCur != null) {
+                                            while (pCur.moveToNext()) {
+                                                String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
 
-                                        ParseObject contactsList = new ParseObject("contactsList");
+                                                ParseObject contactsList = new ParseObject("contactsList");
 
-                                        contactsList.put("phoneNumber", phoneNo);
-                                        contactsList.put("name", name);
-                                        contactsList.put("addedBy", user.getObjectId());
-                                        contactsList.saveInBackground();
+                                                contactsList.put("phoneNumber", phoneNo);
+                                                contactsList.put("name", name);
+                                                contactsList.put("addedBy", user.getObjectId());
+                                                contactsList.saveInBackground();
 
+                                            }
+                                        }
+                                        if (pCur != null) {
+                                            pCur.close();
+                                        }
                                     }
-                                    pCur.close();
                                 }
                             }
+                        }
+                        if(cur != null) {
+                            cur.close();
                         }
                         startActivity(new Intent(SignupActivity.this, FacebookLogin.class));
                         finish();
