@@ -9,14 +9,27 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import data.ContactsAdapter;
+import model.Contact;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
+
             setContentView(R.layout.activity_main);
 
 
@@ -113,16 +127,57 @@ public class MainActivity extends AppCompatActivity {
             return fragment;
         }
 
+        private ListView listView;
+        private ArrayList<HashMap<String, String>> contactsListView;
+        private ParseUser user;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            listView = (ListView) rootView.findViewById(R.id.listID);
+            user = ParseUser.getCurrentUser();
+
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            contactsListView = new ArrayList<>();
+
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("contactsList");
+            query.whereEqualTo("addedBy", user.getObjectId());
+            query.findInBackground(new FindCallback<ParseObject>() {
+                public void done(List<ParseObject> contactsListParse, ParseException e) {
+                    if (e == null) {
+                        Log.d("score", "Retrieved " + contactsListParse.size() + " contacts");
+
+                        for (int i = 0; i < contactsListParse.size(); i++) {
+
+                            HashMap<String, String> data = new HashMap<>();
+
+                            data.put("name", contactsListParse.get(i).get("name").toString());
+
+                            contactsListView.add(data);
+
+                            if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
+
+                                ContactsAdapter contactsAdapter = new ContactsAdapter(getContext(), contactsListView);
+
+                                listView.setAdapter(contactsAdapter);
+
+                            }
+
+                        }
+
+                    } else {
+                        Log.d("score", "Error: " + e.getMessage());
+                    }
+                }
+            });
 
             return rootView;
         }
     }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

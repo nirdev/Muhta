@@ -26,15 +26,15 @@
         <activity
             android:name=".SignupActivity"
             android:label="Sign Up" />
-        <!--to be able to render the CountrycodeActivity as a dialog instead of a full screen activity,-->
-        <!--we must change-->
-        <!--the Activitys default theme. We can do this in the AndroidManifest.xml file.-->
+        <!-- to be able to render the CountrycodeActivity as a dialog instead of a full screen activity, -->
+        <!-- we must change -->
+        <!-- the Activitys default theme. We can do this in the AndroidManifest.xml file. -->
         <activity
             android:name=".CountrycodeActivity"
             android:excludeFromRecents="true"
-            android:theme="@android:style/Theme.Holo.Light.Dialog"
+            android:label="@string/title_activity_countrycode"
             android:noHistory="true"
-            android:label="@string/title_activity_countrycode"/>
+            android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
             android:name=".FacebookLogin"
             android:label="Sign Up - Facebook" />
@@ -56,7 +56,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".Main2Activity"></activity>
     </application>
 
 </manifest>
