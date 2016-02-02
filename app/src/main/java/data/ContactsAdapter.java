@@ -1,6 +1,7 @@
 package data;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +29,12 @@ public class ContactsAdapter extends BaseAdapter{
     public ContactsAdapter (Context context, ArrayList<HashMap<String, String>>  data){
         mContext = context;
         contacts = data;
-        //inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         inflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
+
         return contacts.size();
     }
 
@@ -67,6 +68,7 @@ public class ContactsAdapter extends BaseAdapter{
 
         HashMap<String, String> mContact;
         mContact = contacts.get(position);
+//        Log.e("listPosition", "value: " +position);
         mHolder.mText.setText(mContact.get("name"));
 
         return convertView;
