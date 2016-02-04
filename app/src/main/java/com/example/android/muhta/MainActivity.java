@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -163,13 +163,12 @@ public class MainActivity extends AppCompatActivity {
 
                             contactsListView.add(data);
 
-                            if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
+                                                    }
+                        if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
 
-                                ContactsAdapter contactsAdapter = new ContactsAdapter(getContext(), contactsListView);
+                            ContactsAdapter contactsAdapter = new ContactsAdapter(getContext(), contactsListView);
 
-                                listView.setAdapter(contactsAdapter);
-
-                            }
+                            listView.setAdapter(contactsAdapter);
 
                         }
 

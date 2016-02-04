@@ -1,10 +1,12 @@
 package data;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,12 +29,12 @@ public class ContactsAdapter extends BaseAdapter{
     public ContactsAdapter (Context context, ArrayList<HashMap<String, String>>  data){
         mContext = context;
         contacts = data;
-        inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        //inflater = LayoutInflater.from(context);
+        inflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
+
         return contacts.size();
     }
 
@@ -48,21 +50,31 @@ public class ContactsAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
+
+        final ViewHolder mHolder;
 
         if(convertView == null){
 
-            view = inflater.inflate(R.layout.list_row, parent, false);
+            convertView = inflater.inflate(R.layout.list_row, parent, false);
+            mHolder = new ViewHolder();
 
-            TextView name = (TextView) view.findViewById(R.id.contact_name);
+            mHolder.mText = (TextView) convertView.findViewById(R.id.contact_name);
 
-            HashMap<String, String> mContact;
-
-            mContact = contacts.get(position);
-
-            name.setText(mContact.get("name"));
+            convertView.setTag(mHolder);
+        }
+        else{
+            mHolder = (ViewHolder) convertView.getTag();
         }
 
-        return view;
+        HashMap<String, String> mContact;
+        mContact = contacts.get(position);
+//        Log.e("listPosition", "value: " +position);
+        mHolder.mText.setText(mContact.get("name"));
+
+        return convertView;
+    }
+    private class ViewHolder {
+        private TextView mText;
+        private ImageView mImage;
     }
 }
