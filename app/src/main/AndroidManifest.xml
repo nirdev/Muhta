@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    //For ImageLoader
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".MuhtaApplication"
         android:allowBackup="true"
@@ -24,19 +27,19 @@
             android:value="CriO0LzgOxmCTDVsLHtzvgTRmNec89xDQl8jniwX" />
 
         <activity
-            android:name=".SignupActivity"
+            android:name=".SignUp.SignupActivity"
             android:label="Sign Up" />
         <!-- to be able to render the CountrycodeActivity as a dialog instead of a full screen activity, -->
         <!-- we must change -->
         <!-- the Activitys default theme. We can do this in the AndroidManifest.xml file. -->
         <activity
-            android:name=".CountrycodeActivity"
+            android:name=".SignUp.CountrycodeActivity"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_countrycode"
             android:noHistory="true"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
-            android:name=".FacebookLogin"
+            android:name=".SignUp.FacebookLogin"
             android:label="Sign Up - Facebook" />
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -44,7 +47,7 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".TutorialActivity"
+            android:name=".SignUp.TutorialActivity.TutorialActivity"
             android:label="Sign Up - Tutorial" />
         <activity
             android:name=".MainActivity"

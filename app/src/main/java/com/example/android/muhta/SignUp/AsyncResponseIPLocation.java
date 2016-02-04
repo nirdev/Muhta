@@ -1,4 +1,4 @@
-package com.example.android.muhta;
+package com.example.android.muhta.SignUp;
 
 public interface AsyncResponseIPLocation {
 

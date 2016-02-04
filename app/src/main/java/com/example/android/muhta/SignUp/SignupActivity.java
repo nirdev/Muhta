@@ -1,4 +1,4 @@
-package com.example.android.muhta;
+package com.example.android.muhta.SignUp;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.muhta.R;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;

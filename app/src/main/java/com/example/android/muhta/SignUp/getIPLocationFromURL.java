@@ -1,4 +1,4 @@
-package com.example.android.muhta;
+package com.example.android.muhta.SignUp;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -94,7 +94,7 @@ public class getIPLocationFromURL extends AsyncTask<String, String, String> {
 
 
                    countryNameINTERFACE.processFinish(mCountryAndCodeforResult);
-                    Log.e("good", mCountryFromIP + ":" + mCountrycode);
+                    //Log.e("good", mCountryFromIP + ":" + mCountrycode);
 
                     break;
 
@@ -104,7 +104,7 @@ public class getIPLocationFromURL extends AsyncTask<String, String, String> {
 
             }
 
-            Log.e("My App", "muhuhuh");
+           // Log.e("My App", "muhuhuh");
             //Toast.makeText(mContext, "mohuhuhu" + Util.getString("country", obj), Toast.LENGTH_LONG).show();
 
 

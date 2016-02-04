@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".TutorialActivity">
+    tools:context=".SignUp.TutorialActivity.TutorialActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,5 +23,7 @@
         android:layout_marginBottom="30dp"
         android:text="Next"
         android:id="@+id/next_tutorial_button" />
+
+
 
 </RelativeLayout>

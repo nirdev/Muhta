@@ -1,10 +1,12 @@
-package com.example.android.muhta;
+package com.example.android.muhta.SignUp;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.android.muhta.R;
+import com.example.android.muhta.SignUp.TutorialActivity.TutorialActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;

@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.android.muhta.SignUp.SignupActivity;
+import com.example.android.muhta.SignUp.TutorialActivity.TutorialActivity;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -29,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import data.ContactsAdapter;
-import model.Contact;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -96,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            Intent myIntent = new Intent(this, TutorialActivity.class);
+            startActivity(myIntent);
             return true;
         }
 
@@ -140,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
             user = ParseUser.getCurrentUser();
 
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
 
             contactsListView = new ArrayList<>();
 
